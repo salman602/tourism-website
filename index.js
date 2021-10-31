@@ -19,6 +19,7 @@ async function run (){
     await client.connect();
     const database = client.db("travel_cove_db");
     const serviceCollection = database.collection("services");
+    const bookingCollection = database.collection("bookings");
 
     app.get('/services', async (req, res) =>{
       const cursor = serviceCollection.find({});
@@ -27,12 +28,36 @@ async function run (){
       res.send(services);
     });
 
+    // Get bookings data from database
+    app.get('/bookings', async (req, res) =>{
+      const cursor = bookingCollection.find({});
+      const bookings = await cursor.toArray();
+      res.send(bookings);
+    })
+
     app.get('/services/:id', async (req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
       const service = await serviceCollection.findOne(query);
       res.json(service);
       console.log(service);
+    })
+
+    // Bookings API
+    app.post('/bookings', async (req, res)=>{
+      const booking = req.body;
+      const result = await bookingCollection.insertOne(booking);
+      
+      res.json(result)
+    });
+
+    // DELETE a Booking
+    app.delete('/bookings/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await bookingCollection.deleteOne(query);
+      console.log('deleting booking with id',id);
+      res.json(result)
     })
     
   }
