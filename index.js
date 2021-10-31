@@ -18,14 +18,14 @@ async function run (){
   try{
     await client.connect();
     const database = client.db("travel_cove_db");
-    const serviceCollection = database.collection("services");
+    const packageCollection = database.collection("packages");
     const bookingCollection = database.collection("bookings");
 
-    app.get('/services', async (req, res) =>{
-      const cursor = serviceCollection.find({});
-      const services = await cursor.toArray();
-      // console.log(services);
-      res.send(services);
+    app.get('/packages', async (req, res) =>{
+      const cursor = packageCollection.find({});
+      const packages = await cursor.toArray();
+      // console.log(packages);
+      res.send(packages);
     });
 
     // Get bookings data from database
@@ -35,19 +35,19 @@ async function run (){
       res.send(bookings);
     })
 
-    app.get('/services/:id', async (req, res) =>{
+    app.get('/packages/:id', async (req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
-      const service = await serviceCollection.findOne(query);
+      const service = await packageCollection.findOne(query);
       res.json(service);
       console.log(service);
     })
 
     // Add a new package
-    app.post('/services', async(req, res)=>{
+    app.post('/packages', async(req, res)=>{
       const package = req.body;
       console.log('hit the post Api', package)
-      const result = await serviceCollection.insertOne(package);
+      const result = await packageCollection.insertOne(package);
       console.log(result)
       res.json(result)
     })
