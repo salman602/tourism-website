@@ -43,6 +43,15 @@ async function run (){
       console.log(service);
     })
 
+    // Add a new package
+    app.post('/services', async(req, res)=>{
+      const package = req.body;
+      console.log('hit the post Api', package)
+      const result = await serviceCollection.insertOne(package);
+      console.log(result)
+      res.json(result)
+    })
+
     // Bookings API
     app.post('/bookings', async (req, res)=>{
       const booking = req.body;
